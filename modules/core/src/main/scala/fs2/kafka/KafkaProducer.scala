@@ -120,13 +120,13 @@ private[kafka] object KafkaProducer {
                     val topic = new TopicPartition(pr.topic, pr.partition.getOrElse(1))
                     queue.lastOption.fold {
                       val newElem = new RecordMetadata(topic, 1L, 0L, timestamp, 1L, 1, 1)
-                      val newQueue = queue.appended(newElem)
-                      broker.addOne((pr.topic -> newQueue))
+                      val newQueue = queue += newElem
+                      broker += (pr.topic -> newQueue)
                       (pr, newElem)
                     } { le =>
                       val newElem = new RecordMetadata(topic, le.offset(), 1L, timestamp, 1L, 1, 1)
-                      val newQueue = queue.appended(newElem)
-                      broker.addOne((pr.topic -> newQueue))
+                      val newQueue = queue += newElem
+                      broker += (pr.topic -> newQueue)
                       (pr, newElem)
                     }
                   }
